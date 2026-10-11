@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>いま整えたい「巡り」診断｜輝由</title>
+<meta name="description" content="8つの質問に答えると、今あなたがいちばん整えたい巡りが分かる診断。九星気学の輝由（きゆ）がお届けします。">
+<meta property="og:title" content="いま整えたい「巡り」診断｜輝由">
+<meta property="og:description" content="8つの質問に答えると、今あなたがいちばん整えたい巡りが分かるよ。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0d1f;
+    --bg-card: #1b1736;
+    --line: #3a3366;
+    --text: #f1edf9;
+    --text-sub: #b9b2d4;
+    --gold: #d8b45a;
+    --gold-strong: #f0cf7a;
+    --choice-hover: #262050;
+    --line-green: #06c755;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 0%, #2a2160 0%, var(--bg) 60%);
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "Noto Sans JP", sans-serif;
+    line-height: 1.8;
+  }
+  main {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 32px 16px 48px;
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 20px;
+  }
+  .brand {
+    text-align: center;
+    color: var(--gold);
+    font-family: "Noto Serif JP", serif;
+    letter-spacing: 0.2em;
+    font-size: 14px;
+    margin: 0 0 8px;
+  }
+  h1, h2 {
+    font-family: "Noto Serif JP", serif;
+    text-align: center;
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  h1 { font-size: 26px; }
+  h1 span { color: var(--gold-strong); }
+  h2 { font-size: 20px; }
+  p { margin: 0 0 16px; }
+  .sub { color: var(--text-sub); font-size: 14px; text-align: center; }
+  .btn {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-gold { background: var(--gold); color: #1a1530; }
+  .btn-gold:hover { background: var(--gold-strong); }
+  .btn-line { background: var(--line-green); color: #fff; }
+  .btn-text {
+    background: none;
+    color: var(--text-sub);
+    font-size: 14px;
+    margin-top: 12px;
+    text-decoration: underline;
+  }
+  .progress {
+    height: 6px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+  .count { color: var(--text-sub); font-size: 13px; text-align: right; margin-bottom: 16px; }
+  .choices { display: grid; gap: 12px; }
+  .choice {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 16px;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.6;
+  }
+  .choice:hover, .choice:focus-visible { background: var(--choice-hover); border-color: var(--gold); outline: none; }
+  .result-name {
+    font-family: "Noto Serif JP", serif;
+    color: var(--gold-strong);
+    font-size: 26px;
+    text-align: center;
+    margin: 4px 0 20px;
+  }
+  .keyword-box {
+    border: 1px dashed var(--gold);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    margin: 24px 0 16px;
+  }
+  .keyword { font-size: 24px; font-weight: 500; color: var(--gold-strong); }
+  .notice { color: var(--text-sub); font-size: 13px; text-align: center; min-height: 1.5em; margin: 8px 0 0; }
+  footer { color: var(--text-sub); font-size: 12px; text-align: center; margin-top: 24px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+
+  <!-- はじめの画面 -->
+  <section id="start" class="card">
+    <p class="brand">輝由（きゆ）｜九星気学</p>
+    <h1>いま整えたい<br><span>「巡り」</span>診断</h1>
+    <p class="sub">8つの質問に答えると、<br>今あなたがいちばん整えたい巡りが分かるよ。</p>
+    <button id="start-btn" class="btn btn-gold" type="button">診断をはじめる</button>
+  </section>
+
+  <!-- 質問の画面 -->
+  <section id="quiz" class="card" hidden>
+    <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+    <p id="count" class="count"></p>
+    <h2 id="question"></h2>
+    <div id="choices" class="choices"></div>
+  </section>
+
+  <!-- 結果の画面 -->
+  <section id="result" class="card" hidden>
+    <p class="sub">あなたは</p>
+    <p id="result-name" class="result-name"></p>
+    <p id="result-text"></p>
+    <div class="keyword-box">
+      <p class="sub">LINEでこの言葉を送ってくれたら、<br>このタイプの詳しい読み方が届くよ</p>
+      <p id="keyword" class="keyword"></p>
+    </div>
+    <a id="line-btn" class="btn btn-line" href="#" target="_blank" rel="noopener">LINEで詳しい読み方を受け取る</a>
+    <p id="notice" class="notice"></p>
+    <button id="retry-btn" class="btn btn-text" type="button">もう一度診断する</button>
+  </section>
+
+  <footer>占いによる読み解きです。未来の結果を約束するものではありません。<br>© 輝由（きゆ）</footer>
+</main>
+
+<script>
+  // ここに公式LINEの友だち追加URLを入れる（例：https://lin.ee/xxxxxxx）
+  const LINE_URL = "https://lin.ee/rXvG2T7";
+
+  // 質問と選択肢（type はタイプ A〜D）
+  const QUESTIONS = [
+    { text: "夜、寝る前にふと頭に浮かぶのは？", choices: [
+      { label: "あの人からの連絡", type: "A" },
+      { label: "明日の仕事の段取り", type: "B" },
+      { label: "今日の会話で引っかかった一言", type: "C" },
+      { label: "散らかった部屋や、今月の出費", type: "D" } ] },
+    { text: "休みの日、いちばん気になるのは？", choices: [
+      { label: "誰かと会う予定がないこと", type: "A" },
+      { label: "仕事の連絡が来ていないか", type: "B" },
+      { label: "断りきれなかった誘い", type: "C" },
+      { label: "家のことが片付かないこと", type: "D" } ] },
+    { text: "スマホでいちばんよく開くのは？", choices: [
+      { label: "気になる人とのトーク", type: "A" },
+      { label: "仕事のメールやチャット", type: "B" },
+      { label: "友達や家族のグループのやりとり", type: "C" },
+      { label: "買い物アプリや家計のメモ", type: "D" } ] },
+    { text: "最近ため息が出たのは？", choices: [
+      { label: "既読のまま返事が来ない時", type: "A" },
+      { label: "頑張りが伝わっていないと感じた時", type: "B" },
+      { label: "気をつかいすぎて疲れた時", type: "C" },
+      { label: "気づいたらお金が減っていた時", type: "D" } ] },
+    { text: "占いでまず見てみたいのは？", choices: [
+      { label: "恋の流れ", type: "A" },
+      { label: "仕事の動きどき", type: "B" },
+      { label: "人との付き合い方", type: "C" },
+      { label: "方位や暮らしの整え方", type: "D" } ] },
+    { text: "今年のうちに変えたいことは？", choices: [
+      { label: "恋の続き方", type: "A" },
+      { label: "働き方", type: "B" },
+      { label: "付き合う人との距離感", type: "C" },
+      { label: "住まいやお金の使い方", type: "D" } ] },
+    { text: "友達にいちばん相談しているのは？", choices: [
+      { label: "恋の話", type: "A" },
+      { label: "職場の話", type: "B" },
+      { label: "友達や家族との関係", type: "C" },
+      { label: "暮らしやお金のこと", type: "D" } ] },
+    { text: "「動く月」が来たら、最初にしたいことは？", choices: [
+      { label: "気になる人に連絡する", type: "A" },
+      { label: "新しい仕事に手を挙げる", type: "B" },
+      { label: "会いたい人に会いに行く", type: "C" },
+      { label: "模様替えや片付けをする", type: "D" } ] },
+  ];
+
+  // 結果4タイプ
+  const RESULTS = {
+    A: { name: "恋の巡りタイプ", keyword: "恋愛",
+         text: "今いちばん気持ちが向いているのは、大切な人との距離。動く月と整える月が分かると、近づき方を選びやすくなるよ。" },
+    B: { name: "仕事の巡りタイプ", keyword: "仕事",
+         text: "今は仕事の進め方に気持ちが向いている時。手を挙げる月と、足元を固める月を分けて考えてみよう。" },
+    C: { name: "人の巡りタイプ", keyword: "人間関係",
+         text: "人に気をつかう分、疲れもたまりやすい時。会う時期と、一人で充電する時期を分けてみよう。" },
+    D: { name: "暮らしの巡りタイプ", keyword: "暮らし",
+         text: "暮らしを整えたい気持ちが強くなっている時。片付けの月と、新しくする月を知っておくと動きやすいよ。" },
+  };
+
+  const NEXT_DELAY_MS = 150; // 選んでから次の質問に進むまでの間
+
+  const el = (id) => document.getElementById(id);
+  let current = 0;
+  let answers = [];
+
+  // 選択肢の並びを入れ替える（答えが偏らないように）
+  function shuffle(list) {
+    const copy = list.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function show(sectionId) {
+    ["start", "quiz", "result"].forEach((id) => { el(id).hidden = id !== sectionId; });
+    window.scrollTo(0, 0);
+  }
+
+  function renderQuestion() {
+    const q = QUESTIONS[current];
+    el("progress-bar").style.width = (current / QUESTIONS.length * 100) + "%";
+    el("count").textContent = (current + 1) + " / " + QUESTIONS.length;
+    el("question").textContent = q.text;
+    const box = el("choices");
+    box.innerHTML = "";
+    shuffle(q.choices).forEach((c) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice";
+      btn.textContent = c.label;
+      btn.addEventListener("click", () => choose(c.type));
+      box.appendChild(btn);
+    });
+  }
+
+  function choose(type) {
+    answers.push(type);
+    current++;
+    if (current < QUESTIONS.length) {
+      setTimeout(renderQuestion, NEXT_DELAY_MS);
+    } else {
+      showResult();
+    }
+  }
+
+  // いちばん多いタイプ。同じ数なら最後の質問（Q8）の答えを優先する
+  function decideType() {
+    const counts = { A: 0, B: 0, C: 0, D: 0 };
+    answers.forEach((t) => { counts[t]++; });
+    const max = Math.max(...Object.values(counts));
+    const tops = Object.keys(counts).filter((t) => counts[t] === max);
+    const lastAnswer = answers[answers.length - 1];
+    return tops.includes(lastAnswer) ? lastAnswer : tops[0];
+  }
+
+  function showResult() {
+    const r = RESULTS[decideType()];
+    el("result-name").textContent = r.name;
+    el("result-text").textContent = r.text;
+    el("keyword").textContent = "「" + r.keyword + "」";
+    el("line-btn").dataset.keyword = r.keyword;
+    el("line-btn").href = LINE_URL || "#";
+    el("notice").textContent = "";
+    show("result");
+  }
+
+  // LINEへ進む前に、キーワードを自動でコピーしておく
+  el("line-btn").addEventListener("click", async (e) => {
+    const keyword = e.currentTarget.dataset.keyword;
+    if (!LINE_URL) {
+      e.preventDefault();
+      el("notice").textContent = "LINEのURLがまだ設定されていません。";
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(keyword);
+      el("notice").textContent = "「" + keyword + "」をコピーしました。LINEに貼って送ってね。";
+    } catch (err) {
+      el("notice").textContent = "LINEで「" + keyword + "」と送ってね。";
+    }
+  });
+
+  el("start-btn").addEventListener("click", () => {
+    current = 0;
+    answers = [];
+    renderQuestion();
+    show("quiz");
+  });
+
+  el("retry-btn").addEventListener("click", () => show("start"));
+</script>
+</body>
+</html>
