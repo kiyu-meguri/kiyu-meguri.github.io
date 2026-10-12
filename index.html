@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>いま整えたい「巡り」診断｜輝由</title>
-<meta name="description" content="8つの質問に答えると、今あなたがいちばん整えたい巡りが分かる診断。九星気学の輝由（きゆ）がお届けします。">
-<meta property="og:title" content="いま整えたい「巡り」診断｜輝由">
-<meta property="og:description" content="8つの質問に答えると、今あなたがいちばん整えたい巡りが分かるよ。">
+<title>恋の巡り診断｜輝由</title>
+<meta name="description" content="8つの質問に答えると、今のあなたの恋の悩みのタイプが分かる診断。九星気学の輝由（きゆ）がお届けします。">
+<meta property="og:title" content="恋の巡り診断｜輝由">
+<meta property="og:description" content="8つの質問に答えると、今のあなたの恋の悩みのタイプが分かるよ。">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,6 +132,8 @@
   .notice { color: var(--text-sub); font-size: 13px; text-align: center; min-height: 1.5em; margin: 8px 0 0; }
   footer { color: var(--text-sub); font-size: 12px; text-align: center; margin-top: 24px; }
   [hidden] { display: none !important; }
+  /* 日本語を言葉のまとまりで改行する（<wbr> の所だけで切れる） */
+  .card { word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
 </style>
 </head>
 <body>
@@ -140,8 +142,8 @@
   <!-- はじめの画面 -->
   <section id="start" class="card">
     <p class="brand">輝由（きゆ）｜九星気学</p>
-    <h1>いま整えたい<br><span>「巡り」</span>診断</h1>
-    <p class="sub">8つの質問に答えると、<br>今あなたがいちばん整えたい巡りが分かるよ。</p>
+    <h1><span>恋の巡り</span><br>診断</h1>
+    <p class="sub">8つの質問に答えると、<br>今のあなたの恋の悩みのタイプが分かるよ。</p>
     <button id="start-btn" class="btn btn-gold" type="button">診断をはじめる</button>
   </section>
 
@@ -175,60 +177,82 @@
   const LINE_URL = "https://lin.ee/rXvG2T7";
 
   // 質問と選択肢（type はタイプ A〜D）
+  // A=続かない／B=選ばれない／C=気持ちが分からない／D=出会いがない
   const QUESTIONS = [
-    { text: "夜、寝る前にふと頭に浮かぶのは？", choices: [
-      { label: "あの人からの連絡", type: "A" },
-      { label: "明日の仕事の段取り", type: "B" },
-      { label: "今日の会話で引っかかった一言", type: "C" },
-      { label: "散らかった部屋や、今月の出費", type: "D" } ] },
-    { text: "休みの日、いちばん気になるのは？", choices: [
-      { label: "誰かと会う予定がないこと", type: "A" },
-      { label: "仕事の連絡が来ていないか", type: "B" },
-      { label: "断りきれなかった誘い", type: "C" },
-      { label: "家のことが片付かないこと", type: "D" } ] },
-    { text: "スマホでいちばんよく開くのは？", choices: [
-      { label: "気になる人とのトーク", type: "A" },
-      { label: "仕事のメールやチャット", type: "B" },
-      { label: "友達や家族のグループのやりとり", type: "C" },
-      { label: "買い物アプリや家計のメモ", type: "D" } ] },
-    { text: "最近ため息が出たのは？", choices: [
-      { label: "既読のまま返事が来ない時", type: "A" },
-      { label: "頑張りが伝わっていないと感じた時", type: "B" },
-      { label: "気をつかいすぎて疲れた時", type: "C" },
-      { label: "気づいたらお金が減っていた時", type: "D" } ] },
-    { text: "占いでまず見てみたいのは？", choices: [
-      { label: "恋の流れ", type: "A" },
-      { label: "仕事の動きどき", type: "B" },
-      { label: "人との付き合い方", type: "C" },
-      { label: "方位や暮らしの整え方", type: "D" } ] },
-    { text: "今年のうちに変えたいことは？", choices: [
-      { label: "恋の続き方", type: "A" },
-      { label: "働き方", type: "B" },
-      { label: "付き合う人との距離感", type: "C" },
-      { label: "住まいやお金の使い方", type: "D" } ] },
-    { text: "友達にいちばん相談しているのは？", choices: [
-      { label: "恋の話", type: "A" },
-      { label: "職場の話", type: "B" },
-      { label: "友達や家族との関係", type: "C" },
-      { label: "暮らしやお金のこと", type: "D" } ] },
-    { text: "「動く月」が来たら、最初にしたいことは？", choices: [
-      { label: "気になる人に連絡する", type: "A" },
-      { label: "新しい仕事に手を挙げる", type: "B" },
-      { label: "会いたい人に会いに行く", type: "C" },
-      { label: "模様替えや片付けをする", type: "D" } ] },
+    { text: "恋のことで、夜ふと考えてしまうのは？", choices: [
+      { label: "前の恋が、どうして終わってしまったのか", type: "A" },
+      { label: "どうして本命になれないのか", type: "B" },
+      { label: "あの人は本当はどう思っているのか", type: "C" },
+      { label: "そもそも、いい出会いがないこと", type: "D" } ] },
+    { text: "友達に恋の話をする時、よく言うのは？", choices: [
+      { label: "「いつも途中でうまくいかなくなる」", type: "A" },
+      { label: "「いい感じまではいくんだけどね」", type: "B" },
+      { label: "「あの人、何考えてるか分からない」", type: "C" },
+      { label: "「どこかにいい人いないかな」", type: "D" } ] },
+    { text: "LINEの返事が半日来ない。どう感じる？", choices: [
+      { label: "また、このパターンかと思う", type: "A" },
+      { label: "やっぱり私じゃないのかも、と思う", type: "B" },
+      { label: "何かしたかな、とトークを読み返す", type: "C" },
+      { label: "そもそも、やりとりしている相手がいない", type: "D" } ] },
+    { text: "恋愛で、いちばん欲しいものは？", choices: [
+      { label: "長く続く安心感", type: "A" },
+      { label: "「あなたがいい」と選ばれる実感", type: "B" },
+      { label: "相手の本音", type: "C" },
+      { label: "新しい出会いのきっかけ", type: "D" } ] },
+    { text: "これまでの恋をふり返ると？", choices: [
+      { label: "始まりは順調なのに、途中で終わることが多い", type: "A" },
+      { label: "はっきりしない関係のまま、終わりやすい", type: "B" },
+      { label: "相手の気持ちを気にしすぎて、疲れてしまった", type: "C" },
+      { label: "ここしばらく、恋らしい恋をしていない", type: "D" } ] },
+    { text: "休みの日の過ごし方に近いのは？", choices: [
+      { label: "恋人がいる時は会うけど、だんだんすれ違う", type: "A" },
+      { label: "気になる人からの誘いを、つい待ってしまう", type: "B" },
+      { label: "相手の投稿やLINEを、つい見てしまう", type: "C" },
+      { label: "家と職場の往復で、新しい人に会わない", type: "D" } ] },
+    { text: "占いで、まず知りたいのは？", choices: [
+      { label: "関係を長続きさせる過ごし方", type: "A" },
+      { label: "気持ちを伝えるタイミング", type: "B" },
+      { label: "相手の気持ちの読み方", type: "C" },
+      { label: "出会いが増えやすい時期と方位", type: "D" } ] },
+    { text: "「恋で動く月」が来たら、最初にしたいことは？", choices: [
+      { label: "今の関係を、あらためて見つめ直す", type: "A" },
+      { label: "自分から気持ちを伝えてみる", type: "B" },
+      { label: "相手とちゃんと話す時間をつくる", type: "C" },
+      { label: "行ったことのない場所に出かけてみる", type: "D" } ] },
   ];
 
   // 結果4タイプ
   const RESULTS = {
-    A: { name: "恋の巡りタイプ", keyword: "恋愛",
-         text: "今いちばん気持ちが向いているのは、大切な人との距離。動く月と整える月が分かると、近づき方を選びやすくなるよ。" },
-    B: { name: "仕事の巡りタイプ", keyword: "仕事",
-         text: "今は仕事の進め方に気持ちが向いている時。手を挙げる月と、足元を固める月を分けて考えてみよう。" },
-    C: { name: "人の巡りタイプ", keyword: "人間関係",
-         text: "人に気をつかう分、疲れもたまりやすい時。会う時期と、一人で充電する時期を分けてみよう。" },
-    D: { name: "暮らしの巡りタイプ", keyword: "暮らし",
-         text: "暮らしを整えたい気持ちが強くなっている時。片付けの月と、新しくする月を知っておくと動きやすいよ。" },
+    A: { name: "長続きの巡りタイプ", keyword: "続かない",
+         text: "始まりはうまくいくのに続かない時は、関係を深める時期と、ひと休みする時期を取り違えているのかも。巡りを知ると、距離のとり方を選びやすくなるよ。" },
+    B: { name: "本命の巡りタイプ", keyword: "選ばれない",
+         text: "本命になれないのは、魅力が足りないからじゃない。動く月と整える月を知ると、気持ちを伝えるタイミングを選びやすくなるよ。" },
+    C: { name: "心の巡りタイプ", keyword: "気持ち",
+         text: "相手の気持ちが読めなくて不安な時は、相手にも巡りがあると知るだけで、少し楽になるよ。言葉の少なさを、すぐに「冷めた」と決めつけなくて大丈夫。" },
+    D: { name: "出会いの巡りタイプ", keyword: "出会い",
+         text: "出会いが少ない時は、出かける時期や方向が、巡りとずれていることも。動く月と方位を知ると、出会いの場を選びやすくなるよ。" },
   };
+
+  // 言葉の切れ目に <wbr> を入れた HTML を返す（漢字・カタカナ・かっこの前と、句読点の後ろだけで切る）
+  const SEGMENTER = (typeof Intl !== "undefined" && Intl.Segmenter) ? new Intl.Segmenter("ja", { granularity: "word" }) : null;
+  const BREAK_BEFORE = /^[\u4E00-\u9FFF\u30A0-\u30FF「（0-9A-Za-z]/;
+  const BREAK_AFTER = /[、。」）]$/;
+  const escapeHtml = (t) => t.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  function jaWrap(text) {
+    if (!SEGMENTER) return escapeHtml(text);
+    const out = [];
+    let chunk = "", inQuote = 0;
+    for (const { segment } of SEGMENTER.segment(text)) {
+      if (chunk && inQuote === 0 && (BREAK_BEFORE.test(segment) || BREAK_AFTER.test(chunk))) {
+        out.push(escapeHtml(chunk));
+        chunk = "";
+      }
+      chunk += segment;
+      inQuote = Math.max(0, inQuote + (segment.match(/「/g) || []).length - (segment.match(/」/g) || []).length);
+    }
+    if (chunk) out.push(escapeHtml(chunk));
+    return out.join("<wbr>");
+  }
 
   const NEXT_DELAY_MS = 150; // 選んでから次の質問に進むまでの間
 
@@ -255,14 +279,14 @@
     const q = QUESTIONS[current];
     el("progress-bar").style.width = (current / QUESTIONS.length * 100) + "%";
     el("count").textContent = (current + 1) + " / " + QUESTIONS.length;
-    el("question").textContent = q.text;
+    el("question").innerHTML = jaWrap(q.text);
     const box = el("choices");
     box.innerHTML = "";
     shuffle(q.choices).forEach((c) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "choice";
-      btn.textContent = c.label;
+      btn.innerHTML = jaWrap(c.label);
       btn.addEventListener("click", () => choose(c.type));
       box.appendChild(btn);
     });
@@ -291,7 +315,7 @@
   function showResult() {
     const r = RESULTS[decideType()];
     el("result-name").textContent = r.name;
-    el("result-text").textContent = r.text;
+    el("result-text").innerHTML = jaWrap(r.text);
     el("keyword").textContent = "「" + r.keyword + "」";
     el("line-btn").dataset.keyword = r.keyword;
     el("line-btn").href = LINE_URL || "#";
